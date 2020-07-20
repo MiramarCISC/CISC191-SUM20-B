@@ -1,4 +1,15 @@
 package edu.sdccd.cisc191;
+// BeatBox Final Project
+// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+//
+// Group Members
+// Cesar Castillo Alonso
+// William Hammond
+// Paige Hodgkinson
+// Kevin Johnson
+// Thomas Marcoux
+//
+//
 // Final BeatBox Server Program
 //
 // Program taken from

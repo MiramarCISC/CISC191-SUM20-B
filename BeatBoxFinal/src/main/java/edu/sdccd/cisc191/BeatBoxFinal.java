@@ -1,4 +1,15 @@
 package edu.sdccd.cisc191;
+// BeatBox Final Project
+// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+//
+// Group Members
+// Cesar Castillo Alonso
+// William Hammond
+// Paige Hodgkinson
+// Kevin Johnson
+// Thomas Marcoux
+//
+//
 // Final BeatBox Client Program
 //
 // Program taken from
@@ -16,6 +27,11 @@ import java.util.*;
 import java.awt.event.*;
 import java.net.*;
 import javax.swing.event.*;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.scene.control.ChoiceBox;
 
 public class BeatBoxFinal {
 
@@ -36,12 +52,43 @@ public class BeatBoxFinal {
     Sequence mySequence = null;
     Track track;
 
+    final int totalBeats = 16;
+    final int totalInstruments = 41;
+    final int totalCheckBoxes = totalBeats * totalInstruments;
+    final int totalListElements = 2;
+    final int percussionNumber = 9;
+    final int pianoChannel = 1;
+    final String[] availableInstruments = new String[] {"Acoustic Grand Piano",
+            "Acoustic Guitar (steel)", "Overdriven Guitar", "Electric Bass (finger)", "Violin",
+            "Trumpet", "Alto Sax"};
+    int selectedInstrument = 1;
+
     String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare",
             "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas",
             "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom",
-            "High Agogo", "Open Hi Conga"};
+            "High Agogo", "Open Hi Conga", "C above Middle C", "B above Middle C",
+            "A# above Middle C", "A above Middle C", "G# above Middle C",
+            "G above Middle C", "F# above Middle C", "F above Middle C",
+            "E above Middle C", "D# above Middle C", "D above Middle C",
+            "C# above Middle C", "Middle C", "B below Middle C",
+            "A# below Middle C", "A below Middle C", "G# below Middle C",
+            "G below Middle C", "F# below Middle C", "F below Middle C",
+            "E below Middle C", "D# below Middle C", "D below Middle C",
+            "C# below Middle C", "C below Middle C"};
 
-    int[] instruments = {35, 42, 46, 38, 49, 39, 50, 60, 70, 72, 64, 56, 58, 47, 67, 63};
+    int[] instruments = {percussionNumber, percussionNumber, percussionNumber, percussionNumber, percussionNumber,
+            percussionNumber, percussionNumber, percussionNumber, percussionNumber, percussionNumber,
+            percussionNumber,percussionNumber, percussionNumber, percussionNumber, percussionNumber,
+            percussionNumber, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
+            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
+            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
+            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
+            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
+            selectedInstrument};
+
+    int[] instrumentsNotes = {35, 42, 46, 38, 49, 39, 50, 60, 70, 72, 64, 56, 58, 47, 67, 63,
+            72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60,
+            59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48};
 
     public static void main(String[] args) {
         new BeatBoxFinal().startUp(args[0]);    // args[0] is your user ID/screen name
@@ -68,7 +115,7 @@ public class BeatBoxFinal {
     } // close startUP
 
     public void buildGUI() {
-        System.out.println("Starting GUI...");
+
         theFrame = new JFrame("Cyber BeatBox");
         BorderLayout layout = new BorderLayout();
         JPanel background = new JPanel(layout);
@@ -97,6 +144,61 @@ public class BeatBoxFinal {
         sendIt.addActionListener(new MySendListener());
         buttonBox.add(sendIt);
 
+
+        // Create combobox
+        JLabel instrumJLabel;
+        JComboBox cb;
+        cb = new JComboBox<String>(availableInstruments);
+        cb.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedInstrumString = cb.getSelectedItem().toString();
+
+                switch(selectedInstrumString)
+                {
+                    case "Acoustic Grand Piano":
+                        selectedInstrument = 1;
+                        break;
+                    case "Acoustic Guitar (steel)":
+                        selectedInstrument = 26;
+                        break;
+                    case "Overdriven Guitar":
+                        selectedInstrument = 30;
+                        break;
+                    case "Electric Bass (finger)":
+                        selectedInstrument = 34;
+                        break;
+                    case "Violin":
+                        selectedInstrument = 41;
+                        break;
+                    case "Trumpet":
+                        selectedInstrument = 57;
+                        break;
+                    case "Alto Sax":
+                        selectedInstrument = 66;
+                        break;
+                    default:
+                        selectedInstrument = 1;
+                }
+
+                // Updating the instruments array for the new value of selectedInstrument
+
+                for (int i = 16; i < instruments.length; i++) {
+                    instruments[i] = selectedInstrument;
+                }
+
+                // Stopping
+                sequencer.stop();
+
+                //Starting
+                buildTrackAndStart();
+
+            }
+        });
+
+        buttonBox.add(cb);
+        instrumJLabel = new JLabel("Select Instrument");
+
+
         userMessage = new JTextField();
         buttonBox.add(userMessage);
 
@@ -108,7 +210,7 @@ public class BeatBoxFinal {
         incommingList.setListData(listVector); // no data to start with
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < totalInstruments; i++) {
             nameBox.add(new Label(instrumentNames[i]));
         }
 
@@ -116,13 +218,13 @@ public class BeatBoxFinal {
         background.add(BorderLayout.WEST, nameBox);
 
         theFrame.getContentPane().add(background);
-        GridLayout grid = new GridLayout(16, 16);
+        GridLayout grid = new GridLayout(totalInstruments, totalBeats);
         grid.setVgap(1);
         grid.setHgap(2);
         mainPanel = new JPanel(grid);
         background.add(BorderLayout.CENTER, mainPanel);
 
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < totalCheckBoxes; i++) {
             JCheckBox c = new JCheckBox();
             c.setSelected(false);
             checkboxList.add(c);
@@ -147,32 +249,44 @@ public class BeatBoxFinal {
     } // close setUpMidi
 
     public void buildTrackAndStart() {
-        ArrayList<Integer> trackList = null; // this will hold the instruments for each
+        // Initialize the 3-D ArrayList
+
+        ArrayList<ArrayList<ArrayList<Integer>>> trackList = new ArrayList<>(totalInstruments);
+
+        // Initialize each element of ArrayList with ArrayList<ArrayList<Integer>>
+
+        for(int i = 0; i < totalInstruments; i++) {
+            trackList.add(new ArrayList<ArrayList<Integer>>(totalBeats));
+            for (int j = 0; j < totalBeats; j++) {
+                trackList.get(i).add(new ArrayList<Integer>(totalListElements));
+            }
+        }
+
         sequence.deleteTrack(track);
         track = sequence.createTrack();
 
         // Build a track by walking through the checkboxes to get their state, and mapping
         // that to an instrument (and making the MidiEvent for it).
 
-        for (int i = 0; i < 16; i++) {
 
-            trackList = new ArrayList<Integer>();
+        for (int i = 0; i < totalInstruments; i++) {
 
-
-            for (int j = 0; j < 16; j++) {
-                JCheckBox jc = (JCheckBox) checkboxList.get(j + (16*i));
+            for (int j = 0; j < totalBeats; j++) {
+                JCheckBox jc = (JCheckBox) checkboxList.get(j + (totalBeats*i));
                 if (jc.isSelected()) {
                     int key = instruments[i];
-                    trackList.add(new Integer(key));
+                    int keyNotes = instrumentsNotes[i];
+                    trackList.get(i).get(j).add(new Integer(key));
+                    trackList.get(i).get(j).add(new Integer(keyNotes));
                 } else {
-                    trackList.add(null);  // because this slot should be empty in the track
+                    trackList.get(i).get(j).add(null); // because this slot should be empty in the track
+                    trackList.get(i).get(j).add(null);
                 }
             } // close inner loop
-            makeTracks(trackList);
+            makeTracks(trackList, i);
 
         } // close outer loop
 
-        track.add(makeEvent(192,9,1,0,15)); // - so we always go to full 16 beats
         try {
             sequencer.setSequence(sequence);
             sequencer.setLoopCount(sequencer.LOOP_CONTINUOUSLY);
@@ -210,8 +324,8 @@ public class BeatBoxFinal {
     public class MySendListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
             // make an arraylist of just the STATE of the checkboxes
-            boolean[] checkboxState = new boolean[256];
-            for (int i = 0; i < 256; i++) {
+            boolean[] checkboxState = new boolean[totalCheckBoxes];
+            for (int i = 0; i < totalCheckBoxes; i++) {
                 JCheckBox check = (JCheckBox) checkboxList.get(i);
                 if (check.isSelected()) {
                     checkboxState[i] = true;
@@ -243,6 +357,8 @@ public class BeatBoxFinal {
             }
         } // close valueChanged
     } // close inner class
+
+
 
     public class RemoteReader implements Runnable {
         boolean[] checkboxState = null;
@@ -284,7 +400,7 @@ public class BeatBoxFinal {
     // IMMEDIATELY change the pattern to the one they selected.
     //
     public void changeSequence(boolean[] checkboxState) {
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < totalCheckBoxes; i++) {
             JCheckBox check = (JCheckBox) checkboxList.get(i);
             if (checkboxState[i]) {
                 check.setSelected(true);
@@ -294,14 +410,25 @@ public class BeatBoxFinal {
         } // close loop
     } // close changeSequence
 
-    public void makeTracks(ArrayList list) {
-        Iterator it = list.iterator();
-        for (int i = 0; i < 16; i++) {
-            Integer num = (Integer) it.next();
-            if (num != null) {
-                int numKey = num.intValue();
-                track.add(makeEvent(144, 9, numKey, 100, i));
-                track.add(makeEvent(128, 9, numKey, 100, i + 1));
+    public void makeTracks(ArrayList<ArrayList<ArrayList<Integer>>> list, int currentInstrum) {
+
+        for (int i = 0; i < totalBeats; i++) {
+
+            Integer num1 = (Integer) list.get(currentInstrum).get(i).get(0);
+            Integer num2 = (Integer) list.get(currentInstrum).get(i).get(1);
+
+            if (num1 != null && num2 != null ) {
+
+                int numKey = num1.intValue();
+                int numNote = num2.intValue();
+                if (numKey == percussionNumber) {
+                    track.add(makeEvent(144, percussionNumber, numNote, 100, i));
+                    track.add(makeEvent(128, percussionNumber, numNote, 100, i + 1));
+                } else {
+                    track.add(makeEvent(192,1,numKey,0,totalBeats - 1)); // - so we always go to full 16 beats
+                    track.add(makeEvent(144, pianoChannel, numNote, 100, i));
+                    track.add(makeEvent(128, pianoChannel, numNote, 100, i + 1));
+                }
             }
         } // close loop
     } // close makeTracks
