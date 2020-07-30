@@ -103,18 +103,6 @@ public class BeatBoxApp implements BeatBoxConstants {
         userName = name;
         // open connection to the server
         // Set up the networking, I/O, and make (and start) the reader thread.
-        try {
-            Socket sock = new Socket("127.0.0.1", 4242);
-            out = new ObjectOutputStream(sock.getOutputStream());
-            in = new ObjectInputStream(sock.getInputStream());
-            rr = new RemoteReader();
-            Thread remote = new Thread(rr);
-            rr.setIn(in);
-            rr.setIncommingList(incommingList);
-            remote.start();
-        } catch (Exception ex) {
-            System.out.println("couldn't connect - you'll have to play alone.");
-        }
 
         // Creating BeatBoxGUI object
         BeatBoxGUI gui = new BeatBoxGUI();
@@ -122,29 +110,43 @@ public class BeatBoxApp implements BeatBoxConstants {
         // Set the userName in BeatBoxGUI
         gui.setUserName(userName);
 
-        // Set the out in BeatBoxGUI
-        gui.setOut(out);
-
-        // Get the ListVector from BeatBoxGUI
-        listVector = gui.getListVector();
-
-        // Set the listVector in RemoteReader
-        rr.setListVector(listVector);
-
-        // Get the incommingList from BeatBoxGUI
-        incommingList = gui.getIncommingList();
-
-        // Set the incommingList in RemoteReader
-        rr.setIncommingList(incommingList);
-
-        // Get the otherSeqsMap from BeatBoxGUI
-        otherSeqsMap = gui.getOtherSeqsMap();
-
-        // Set the otherSeqsMap in RemoteReader
-        rr.setOtherSeqsMap(otherSeqsMap);
-
         // Calling the buildGUI method of BeatBoxGUI
         gui.buildGUI();
+
+        try {
+            Socket sock = new Socket("127.0.0.1", 4242);
+            out = new ObjectOutputStream(sock.getOutputStream());
+            // Set the out in BeatBoxGUI
+            gui.setOut(out);
+            in = new ObjectInputStream(sock.getInputStream());
+            rr = new RemoteReader();
+            Thread remote = new Thread(rr);
+            // Get the ListVector from BeatBoxGUI
+            listVector = gui.getListVector();
+
+            // Set the listVector in RemoteReader
+            rr.setListVector(listVector);
+
+            // Get the incommingList from BeatBoxGUI
+            incommingList = gui.getIncommingList();
+
+            // Set the incommingList in RemoteReader
+            rr.setIncommingList(incommingList);
+
+            // Get the otherSeqsMap from BeatBoxGUI
+            otherSeqsMap = gui.getOtherSeqsMap();
+
+            // Set the otherSeqsMap in RemoteReader
+            rr.setOtherSeqsMap(otherSeqsMap);
+
+            // Set the in in RemoteReader
+            rr.setIn(in);
+
+            remote.start();
+
+        } catch (Exception ex) {
+            System.out.println("couldn't connect - you'll have to play alone.");
+        }
 
     } // close startUP
 } // close class
