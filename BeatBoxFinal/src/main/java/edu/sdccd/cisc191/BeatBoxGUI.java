@@ -44,6 +44,10 @@ public class BeatBoxGUI implements BeatBoxConstants {
     private int nextNum;
     private Vector<String> listVector = new Vector<String>();
     private HashMap<String, boolean[]> otherSeqsMap = new HashMap<String, boolean[]>();
+    private String userName;
+    private ObjectOutputStream out;
+    private int selectedInstrument = 1;
+    private int[] instruments;
 
 
     private final String[] availableInstruments = new String[] {"Acoustic Grand Piano",
@@ -51,7 +55,7 @@ public class BeatBoxGUI implements BeatBoxConstants {
             "Trumpet", "Alto Sax"};
 
 
-    String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare",
+    private final String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare",
             "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas",
             "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom",
             "High Agogo", "Open Hi Conga", "C above Middle C", "B above Middle C",
@@ -63,6 +67,10 @@ public class BeatBoxGUI implements BeatBoxConstants {
             "G below Middle C", "F# below Middle C", "F below Middle C",
             "E below Middle C", "D# below Middle C", "D below Middle C",
             "C# below Middle C", "C below Middle C"};
+
+    // Creating BeatBoxMIDI object
+    BeatBoxMIDI midi = new BeatBoxMIDI();
+
 
 
     // Getters and Setters
@@ -99,6 +107,21 @@ public class BeatBoxGUI implements BeatBoxConstants {
         this.otherSeqsMap = otherSeqsMap;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
+    public void setOut(ObjectOutputStream out) {
+        this.out = out;
+    }
 
 
     public void buildGUI() {
@@ -173,37 +196,42 @@ public class BeatBoxGUI implements BeatBoxConstants {
             mainPanel.add(c);
         } // end loop
 
+        //Set the values for checkboxList in BeatBoxMIDI
+        midi.setCheckboxList(checkboxList);
+
         theFrame.setBounds(50, 50, 300, 300);
         theFrame.pack();
         theFrame.setVisible(true);
 
+        // Calling the setUpMidi method of BeatBoxMIDI
+        midi.setUpMidi();
 
     } // close buildGUI
 
 
     public class MyStartListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
-            buildTrackAndStart();
+            midi.buildTrackAndStart();
         } // close actionPerformed
     } // close inner class
 
     public class MyStopListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
-            sequencer.stop();
+            midi.getSequencer().stop();
         } // close actionPerformed
     } // close inner class
 
     public class MyUpTempoListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
-            float tempoFactor = sequencer.getTempoFactor();
-            sequencer.setTempoFactor((float) (tempoFactor * 1.03));
+            float tempoFactor = midi.getSequencer().getTempoFactor();
+            midi.getSequencer().setTempoFactor((float) (tempoFactor * 1.03));
         } // close actionPerformed
     } // close inner class
 
     public class MyDownTempoListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
-            float tempoFactor = sequencer.getTempoFactor();
-            sequencer.setTempoFactor((float) (tempoFactor * .97));
+            float tempoFactor = midi.getSequencer().getTempoFactor();
+            midi.getSequencer().setTempoFactor((float) (tempoFactor * .97));
         } // close actionPerformed
     } // close inner class
 
@@ -219,8 +247,8 @@ public class BeatBoxGUI implements BeatBoxConstants {
             } // close loop
             String messageToSend = null;
             try {
-                app.getOut().writeObject(app.getUserName() + nextNum++ + ": " + userMessage.getText());
-                app.getOut().writeObject(checkboxState);
+                out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
+                out.writeObject(checkboxState);
             } catch (Exception ex) {
                 System.out.println("Sorry dude. Could not send it to the server.");
             }
@@ -235,9 +263,9 @@ public class BeatBoxGUI implements BeatBoxConstants {
                 if (selected != null) {
                     // now go to the map, and change the sequence
                     boolean[] selectedState = (boolean[]) otherSeqsMap.get(selected);
-                    changeSequence(selectedState);
-                    sequencer.stop();
-                    buildTrackAndStart();
+                    midi.changeSequence(selectedState);
+                    midi.getSequencer().stop();
+                    midi.buildTrackAndStart();
                 }
 
             }
@@ -282,12 +310,13 @@ public class BeatBoxGUI implements BeatBoxConstants {
             for (int i = 16; i < instruments.length; i++) {
                 instruments[i] = selectedInstrument;
             }
+            midi.setInstruments(instruments);
 
             // Stopping
-            sequencer.stop();
+            midi.getSequencer().stop();
 
             //Starting
-            buildTrackAndStart();
+            midi.buildTrackAndStart();
 
         } // close actionPerformed
     } // close inner class
@@ -296,10 +325,11 @@ public class BeatBoxGUI implements BeatBoxConstants {
     // However, it might be used in the future so it was left in.
     public class MyPlayMineListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
-            if (mySequence != null) {
-                sequence = mySequence; // restore to my original
+            if (midi.getMySequence() != null) {
+                midi.setSequence(midi.getMySequence()); // restore to my original
             }
         } // close actionPerformed
     } // close inner class
+
 
 } // close class

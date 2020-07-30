@@ -30,9 +30,45 @@ import javax.swing.event.*;
 
 public class RemoteReader implements Runnable {
 
-    boolean[] checkboxState = null;
-    String nameToShow = null;
-    Object obj = null;
+    private boolean[] checkboxState = null;
+    private String nameToShow = null;
+    private Object obj = null;
+    private ObjectInputStream in;
+    private Vector<String> listVector;
+    private JList incommingList;
+    private HashMap<String, boolean[]> otherSeqsMap;
+
+    public ObjectInputStream getIn() {
+        return in;
+    }
+
+    public void setIn(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    public Vector<String> getListVector() {
+        return listVector;
+    }
+
+    public void setListVector(Vector<String> listVector) {
+        this.listVector = listVector;
+    }
+
+    public JList getIncommingList() {
+        return incommingList;
+    }
+
+    public void setIncommingList(JList incommingList) {
+        this.incommingList = incommingList;
+    }
+
+    public HashMap<String, boolean[]> getOtherSeqsMap() {
+        return otherSeqsMap;
+    }
+
+    public void setOtherSeqsMap(HashMap<String, boolean[]> otherSeqsMap) {
+        this.otherSeqsMap = otherSeqsMap;
+    }
 
     // This is the thread job -- read in data from the server. In this code, 'data' will
     // always be two serialized objects: the String message and the beat pattern (an
@@ -46,15 +82,15 @@ public class RemoteReader implements Runnable {
 
     public void run() {
         try {
-            while ((obj=app.getIn().readObject()) != null) {
+            while ((obj=in.readObject()) != null) {
                 System.out.println("got an object from server");
                 System.out.println(obj.getClass());
                 String nameToShow = (String) obj;
-                checkboxState = (boolean[]) app.getIn().readObject();
-                gui.getOtherSeqsMap().put(nameToShow, checkboxState);
-                gui.getListVector().add(nameToShow);
-                gui.getIncommingList().setListData(gui.getListVector());
+                checkboxState = (boolean[]) in.readObject();
+                otherSeqsMap.put(nameToShow, checkboxState);
+                listVector.add(nameToShow);
+                incommingList.setListData(listVector);
             } // close while
         } catch(Exception ex) {ex.printStackTrace();}
-    } // cloae run
+    } // close run
 } // close class

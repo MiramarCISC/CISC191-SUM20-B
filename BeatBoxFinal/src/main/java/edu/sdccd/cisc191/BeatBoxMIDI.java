@@ -36,6 +36,7 @@ public class BeatBoxMIDI implements BeatBoxConstants {
     private Track track;
 
     private int selectedInstrument = 1;
+    private ArrayList<JCheckBox> checkboxList;
 
     private int[] instruments = {PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER,
             PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER,
@@ -70,6 +71,14 @@ public class BeatBoxMIDI implements BeatBoxConstants {
         this.sequence = sequence;
     }
 
+    public Sequence getMySequence() {
+        return mySequence;
+    }
+
+    public void setMySequence(Sequence mySequence) {
+        this.mySequence = mySequence;
+    }
+
     public int getSelectedInstrument() {
         return selectedInstrument;
     }
@@ -84,6 +93,14 @@ public class BeatBoxMIDI implements BeatBoxConstants {
 
     public void setInstruments(int[] instruments) {
         this.instruments = instruments;
+    }
+
+    public ArrayList<JCheckBox> getCheckboxList() {
+        return checkboxList;
+    }
+
+    public void setCheckboxList(ArrayList<JCheckBox> checkboxList) {
+        this.checkboxList = checkboxList;
     }
 
 
@@ -122,7 +139,7 @@ public class BeatBoxMIDI implements BeatBoxConstants {
         for (int i = 0; i < TOTALINSTRUMENTS; i++) {
 
             for (int j = 0; j < TOTALBEATS; j++) {
-                JCheckBox jc = (JCheckBox) gui.getCheckboxList().get(j + (TOTALBEATS*i));
+                JCheckBox jc = (JCheckBox) checkboxList.get(j + (TOTALBEATS*i));
                 if (jc.isSelected()) {
                     int key = instruments[i];
                     int keyNotes = instrumentsNotes[i];
@@ -151,7 +168,7 @@ public class BeatBoxMIDI implements BeatBoxConstants {
     //
     public void changeSequence(boolean[] checkboxState) {
         for (int i = 0; i < TOTALCHECKBOXES; i++) {
-            JCheckBox check = (JCheckBox) gui.getCheckboxList().get(i);
+            JCheckBox check = (JCheckBox) checkboxList.get(i);
             if (checkboxState[i]) {
                 check.setSelected(true);
             } else {
