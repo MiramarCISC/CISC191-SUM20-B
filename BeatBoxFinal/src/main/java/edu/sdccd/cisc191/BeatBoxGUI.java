@@ -174,10 +174,23 @@ public class BeatBoxGUI implements BeatBoxConstants {
         buttonBox.add(theList);
         incommingList.setListData(listVector); // no data to start with
 
+//        Box nameBox = new Box(BoxLayout.Y_AXIS);
+//        for (int i = 0; i < TOTALINSTRUMENTS; i++) {
+//            nameBox.add(new Label(instrumentNames[i]));
+//        }
+
         Box nameBox = new Box(BoxLayout.Y_AXIS);
-        for (int i = 0; i < TOTALINSTRUMENTS; i++) {
-            nameBox.add(new Label(instrumentNames[i]));
+
+        // Adding Labels for Percussion Instruments
+        for (Percussion percussion : Percussion.values()) {
+            nameBox.add(new Label(percussion.name));
         }
+
+        // Adding Labels for MIDINotes
+        for (MIDINotes notes : MIDINotes.values()) {
+            nameBox.add(new Label(String.valueOf(notes)));
+        }
+
 
         background.add(BorderLayout.EAST, buttonBox);
         background.add(BorderLayout.WEST, nameBox);
