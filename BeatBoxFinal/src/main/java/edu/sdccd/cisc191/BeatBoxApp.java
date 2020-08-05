@@ -37,9 +37,6 @@ public class BeatBoxApp implements BeatBoxConstants {
     private Vector<String> listVector;
     private JList incommingList;
     private HashMap<String, boolean[]> otherSeqsMap;
-    private HashMap<String, Map<Percussion, Set<Integer>>> otherSeqsMapPercussion;
-    private HashMap<String, Map<MIDINotes, Set<Integer>>> otherSeqsMapMIDI;
-    private HashMap<String, Integer> otherSeqsMapInstrument;
 
     // Getters and Setters
 
@@ -91,30 +88,6 @@ public class BeatBoxApp implements BeatBoxConstants {
         this.otherSeqsMap = otherSeqsMap;
     }
 
-    public HashMap<String, Map<Percussion, Set<Integer>>> getOtherSeqsMapPercussion() {
-        return otherSeqsMapPercussion;
-    }
-
-    public void setOtherSeqsMapPercussion(HashMap<String, Map<Percussion, Set<Integer>>> otherSeqsMapPercussion) {
-        this.otherSeqsMapPercussion = otherSeqsMapPercussion;
-    }
-
-    public HashMap<String, Map<MIDINotes, Set<Integer>>> getOtherSeqsMapMIDI() {
-        return otherSeqsMapMIDI;
-    }
-
-    public void setOtherSeqsMapMIDI(HashMap<String, Map<MIDINotes, Set<Integer>>> otherSeqsMapMIDI) {
-        this.otherSeqsMapMIDI = otherSeqsMapMIDI;
-    }
-
-    public HashMap<String, Integer> getOtherSeqsMapInstrument() {
-        return otherSeqsMapInstrument;
-    }
-
-    public void setOtherSeqsMapInstrument(HashMap<String, Integer> otherSeqsMapInstrument) {
-        this.otherSeqsMapInstrument = otherSeqsMapInstrument;
-    }
-
 
     public static void main(String[] args) {
         BeatBoxApp app = new BeatBoxApp();
@@ -162,26 +135,8 @@ public class BeatBoxApp implements BeatBoxConstants {
             // Get the otherSeqsMap from BeatBoxGUI
             otherSeqsMap = gui.getOtherSeqsMap();
 
-            // Get the otherSeqsMapPercussion from BeatBoxGUI
-            otherSeqsMapPercussion = gui.getOtherSeqsMapPercussion();
-
-            // Get the otherSeqsMapMIDI from BeatBoxGUI
-            otherSeqsMapMIDI = gui.getOtherSeqsMapMIDI();
-
-            // Get the otherSeqsMapInstrument from BeatBoxGUI
-            otherSeqsMapInstrument = gui.getOtherSeqsMapInstrument();
-
             // Set the otherSeqsMap in RemoteReader
             rr.setOtherSeqsMap(otherSeqsMap);
-
-            // Set the otherSeqsMapPercussion in RemoteReader
-            rr.setOtherSeqsMapPercussion(otherSeqsMapPercussion);
-
-            // Set the otherSeqsMapMIDI in RemoteReader
-            rr.setOtherSeqsMapMIDI(otherSeqsMapMIDI);
-
-            // Set the otherSeqsMapInstrument in RemoteReader
-            rr.setOtherSeqsMapInstrument(otherSeqsMapInstrument);
 
             // Set the in in RemoteReader
             rr.setIn(in);

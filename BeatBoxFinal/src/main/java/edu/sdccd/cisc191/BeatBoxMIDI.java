@@ -202,7 +202,7 @@ public class BeatBoxMIDI implements BeatBoxConstants {
     // This method is called when the user selects something from the list. We
     // IMMEDIATELY change the pattern to the one they selected.
     //
-    public void changeSequence(boolean[] checkboxState, Map<Percussion, Set<Integer>> percussionBeats, Map<MIDINotes, Set<Integer>> instrumentNoteBeats, int selectedInstrument) {
+    public void changeSequence(boolean[] checkboxState) {
         for (int i = 0; i < TOTALCHECKBOXES; i++) {
             JCheckBox check = (JCheckBox) checkboxList.get(i);
             if (checkboxState[i]) {
@@ -211,10 +211,6 @@ public class BeatBoxMIDI implements BeatBoxConstants {
                 check.setSelected(false);
             }
         } // close loop
-
-        this.percussionBeats = percussionBeats;
-        this.instrumentNoteBeats = instrumentNoteBeats;
-        this.selectedInstrument = selectedInstrument;
 
     } // close changeSequence
 
@@ -226,9 +222,9 @@ public class BeatBoxMIDI implements BeatBoxConstants {
             if (num != null) {
                 int numKey = num.intValue();
                 if (isPercussion) {
+                    track.add(makeEvent(192,PERCUSSIONNUMBER,1,0,TOTALBEATS - 1)); // - so we always go to full 16 beats
                     track.add(makeEvent(144, PERCUSSIONNUMBER, numKey, 100, i));
                     track.add(makeEvent(128, PERCUSSIONNUMBER, numKey, 100, i + 1));
-                    System.out.println("numKey: " + numKey);
                 } else {
                     track.add(makeEvent(192,1,selectedInstrument,0,TOTALBEATS - 1)); // - so we always go to full 16 beats
                     track.add(makeEvent(144, PIANOCHANNEL, numKey, 100, i));
