@@ -37,20 +37,10 @@ public class BeatBoxMIDI implements BeatBoxConstants {
 
     private int selectedInstrument = 1;
     private ArrayList<JCheckBox> checkboxList;
-
-    private int[] instruments = {PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER,
-            PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER,
-            PERCUSSIONNUMBER,PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER, PERCUSSIONNUMBER,
-            PERCUSSIONNUMBER, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
-            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
-            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
-            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
-            selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument, selectedInstrument,
-            selectedInstrument};
-
-    private int[] instrumentsNotes = {35, 42, 46, 38, 49, 39, 50, 60, 70, 72, 64, 56, 58, 47, 67, 63,
-            72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60,
-            59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48};
+    private Map<Percussion, Set<Integer>> percussionBeats = new HashMap<>();
+    private Map<MIDINotes, Set<Integer>> instrumentNoteBeats = new HashMap<>();
+    private boolean isPercussion = false;
+    private boolean keyInMap = false;
 
 
     // Getters and Setters
@@ -87,14 +77,6 @@ public class BeatBoxMIDI implements BeatBoxConstants {
         this.selectedInstrument = selectedInstrument;
     }
 
-    public int[] getInstruments() {
-        return instruments;
-    }
-
-    public void setInstruments(int[] instruments) {
-        this.instruments = instruments;
-    }
-
     public ArrayList<JCheckBox> getCheckboxList() {
         return checkboxList;
     }
@@ -102,6 +84,23 @@ public class BeatBoxMIDI implements BeatBoxConstants {
     public void setCheckboxList(ArrayList<JCheckBox> checkboxList) {
         this.checkboxList = checkboxList;
     }
+
+    public Map<Percussion, Set<Integer>> getPercussionBeats() {
+        return percussionBeats;
+    }
+
+    public void setPercussionBeats(Map<Percussion, Set<Integer>> percussionBeats) {
+        this.percussionBeats = percussionBeats;
+    }
+
+    public Map<MIDINotes, Set<Integer>> getInstrumentNoteBeats() {
+        return instrumentNoteBeats;
+    }
+
+    public void setInstrumentNoteBeats(Map<MIDINotes, Set<Integer>> instrumentNoteBeats) {
+        this.instrumentNoteBeats = instrumentNoteBeats;
+    }
+
 
 
     public void setUpMidi() {
@@ -116,43 +115,80 @@ public class BeatBoxMIDI implements BeatBoxConstants {
 
 
     public void buildTrackAndStart() {
-        // Initialize the 3-D ArrayList
-
-        ArrayList<ArrayList<ArrayList<Integer>>> trackList = new ArrayList<>(TOTALINSTRUMENTS);
-
-        // Initialize each element of ArrayList with ArrayList<ArrayList<Integer>>
-
-        for(int i = 0; i < TOTALINSTRUMENTS; i++) {
-            trackList.add(new ArrayList<ArrayList<Integer>>(TOTALBEATS));
-            for (int j = 0; j < TOTALBEATS; j++) {
-                trackList.get(i).add(new ArrayList<Integer>(TOTALLISTELEMENTS));
-            }
-        }
-
+        ArrayList<Integer> trackList = null;    // This will hold the percussion instrument or selected
+                                                // instrument note for each beat
         sequence.deleteTrack(track);
         track = sequence.createTrack();
 
-        // Build a track by walking through the checkboxes to get their state, and mapping
-        // that to an instrument (and making the MidiEvent for it).
-
-
-        for (int i = 0; i < TOTALINSTRUMENTS; i++) {
-
-            for (int j = 0; j < TOTALBEATS; j++) {
-                JCheckBox jc = (JCheckBox) checkboxList.get(j + (TOTALBEATS*i));
-                if (jc.isSelected()) {
-                    int key = instruments[i];
-                    int keyNotes = instrumentsNotes[i];
-                    trackList.get(i).get(j).add(new Integer(key));
-                    trackList.get(i).get(j).add(new Integer(keyNotes));
-                } else {
-                    trackList.get(i).get(j).add(null); // because this slot should be empty in the track
-                    trackList.get(i).get(j).add(null);
+        for (Percussion percussion : Percussion.values()) {
+            trackList = new ArrayList<Integer>();
+            if (percussionBeats.containsKey(percussion)) {
+                keyInMap = true;
+            } else {
+                keyInMap = false;
+                for (int i = 0; i < TOTALBEATS; i++) {
+                        trackList.add(null);
                 }
-            } // close inner loop
-            makeTracks(trackList, i);
+            }
+            if (keyInMap) {
+                Set<Integer> setOfBeats = percussionBeats.get(percussion);
+                for (int i = 0; i < TOTALBEATS; i++) {
+                    boolean isEqualtoBeat = false;
+                    if (setOfBeats != null || !(setOfBeats.isEmpty())) {
+                        for (Integer value : setOfBeats) {
+                            if (value == i) {
+                                isEqualtoBeat = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isEqualtoBeat) {
+                        int key = percussion.drumKey;
+                        trackList.add(new Integer(key));
 
-        } // close outer loop
+                    } else {
+                        trackList.add(null);
+                    }
+                }
+            }
+            isPercussion = true;
+            makeTracks(trackList, isPercussion);
+        }
+
+        for (MIDINotes notes : MIDINotes.values()) {
+            trackList = new ArrayList<Integer>();
+            if (instrumentNoteBeats.containsKey(notes)) {
+                keyInMap = true;
+            } else {
+                keyInMap = false;
+                for (int i = 0; i < TOTALBEATS; i++) {
+                    trackList.add(null);
+                }
+            }
+            if (keyInMap) {
+                Set<Integer> setOfBeats = instrumentNoteBeats.get(notes);
+                for (int i = 0; i < TOTALBEATS; i++) {
+                    boolean isEqualtoBeat = false;
+                    if (setOfBeats != null || !(setOfBeats.isEmpty())) {
+                        for (Integer value : setOfBeats) {
+                            if (value == i) {
+                                isEqualtoBeat = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isEqualtoBeat) {
+                        int key = notes.midiNote;
+                        trackList.add(new Integer(key));
+
+                    } else {
+                        trackList.add(null);
+                    }
+                }
+            }
+            isPercussion = false;
+            makeTracks(trackList, isPercussion);
+        }
 
         try {
             sequencer.setSequence(sequence);
@@ -166,7 +202,7 @@ public class BeatBoxMIDI implements BeatBoxConstants {
     // This method is called when the user selects something from the list. We
     // IMMEDIATELY change the pattern to the one they selected.
     //
-    public void changeSequence(boolean[] checkboxState) {
+    public void changeSequence(boolean[] checkboxState, Map<Percussion, Set<Integer>> percussionBeats, Map<MIDINotes, Set<Integer>> instrumentNoteBeats, int selectedInstrument) {
         for (int i = 0; i < TOTALCHECKBOXES; i++) {
             JCheckBox check = (JCheckBox) checkboxList.get(i);
             if (checkboxState[i]) {
@@ -175,26 +211,28 @@ public class BeatBoxMIDI implements BeatBoxConstants {
                 check.setSelected(false);
             }
         } // close loop
+
+        this.percussionBeats = percussionBeats;
+        this.instrumentNoteBeats = instrumentNoteBeats;
+        this.selectedInstrument = selectedInstrument;
+
     } // close changeSequence
 
-    public void makeTracks(ArrayList<ArrayList<ArrayList<Integer>>> list, int currentInstrum) {
-
+    public void makeTracks(ArrayList<Integer> list, boolean isPercussion) {
+        //System.out.println("list: " + list.toString());
+        Iterator it = list.iterator();
         for (int i = 0; i < TOTALBEATS; i++) {
-
-            Integer num1 = (Integer) list.get(currentInstrum).get(i).get(0);
-            Integer num2 = (Integer) list.get(currentInstrum).get(i).get(1);
-
-            if (num1 != null && num2 != null ) {
-
-                int numKey = num1.intValue();
-                int numNote = num2.intValue();
-                if (numKey == PERCUSSIONNUMBER) {
-                    track.add(makeEvent(144, PERCUSSIONNUMBER, numNote, 100, i));
-                    track.add(makeEvent(128, PERCUSSIONNUMBER, numNote, 100, i + 1));
+            Integer num = (Integer) it.next();
+            if (num != null) {
+                int numKey = num.intValue();
+                if (isPercussion) {
+                    track.add(makeEvent(144, PERCUSSIONNUMBER, numKey, 100, i));
+                    track.add(makeEvent(128, PERCUSSIONNUMBER, numKey, 100, i + 1));
+                    System.out.println("numKey: " + numKey);
                 } else {
-                    track.add(makeEvent(192,1,numKey,0,TOTALBEATS - 1)); // - so we always go to full 16 beats
-                    track.add(makeEvent(144, PIANOCHANNEL, numNote, 100, i));
-                    track.add(makeEvent(128, PIANOCHANNEL, numNote, 100, i + 1));
+                    track.add(makeEvent(192,1,selectedInstrument,0,TOTALBEATS - 1)); // - so we always go to full 16 beats
+                    track.add(makeEvent(144, PIANOCHANNEL, numKey, 100, i));
+                    track.add(makeEvent(128, PIANOCHANNEL, numKey, 100, i + 1));
                 }
             }
         } // close loop

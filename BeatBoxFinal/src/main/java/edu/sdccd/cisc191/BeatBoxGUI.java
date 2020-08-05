@@ -26,6 +26,7 @@ import javax.sound.midi.*;
 import java.util.*;
 import java.awt.event.*;
 import java.net.*;
+import java.util.List;
 import javax.swing.event.*;
 
 import javafx.beans.value.ChangeListener;
@@ -44,16 +45,22 @@ public class BeatBoxGUI implements BeatBoxConstants {
     private int nextNum;
     private Vector<String> listVector = new Vector<String>();
     private HashMap<String, boolean[]> otherSeqsMap = new HashMap<String, boolean[]>();
+    private HashMap<String, Map<Percussion, Set<Integer>>> otherSeqsMapPercussion = new HashMap<>();
+    private HashMap<String, Map<MIDINotes, Set<Integer>>> otherSeqsMapMIDI = new HashMap<>();
+    private HashMap<String, Integer> otherSeqsMapInstrument = new HashMap<>();
     private String userName;
     private ObjectOutputStream out;
     private int selectedInstrument = 1;
     private int[] instruments;
-
+    private Map<String, JCheckBox> checkboxesPercussion = new HashMap<>();
+    private Map<String, JCheckBox> checkboxesMIDINotes = new HashMap<>();
+    private Map<Percussion, Set<Integer>> percussionBeats = new HashMap<>();
+    private Map<MIDINotes, Set<Integer>> instrumentNoteBeats = new HashMap<>();
+    private JCheckBox checkboxSelected;
 
     private final String[] availableInstruments = new String[] {"Acoustic Grand Piano",
             "Acoustic Guitar (steel)", "Overdriven Guitar", "Electric Bass (finger)", "Violin",
             "Trumpet", "Alto Sax"};
-
 
     private final String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare",
             "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas",
@@ -67,6 +74,7 @@ public class BeatBoxGUI implements BeatBoxConstants {
             "G below Middle C", "F# below Middle C", "F below Middle C",
             "E below Middle C", "D# below Middle C", "D below Middle C",
             "C# below Middle C", "C below Middle C"};
+
 
     // Creating BeatBoxMIDI object
     BeatBoxMIDI midi = new BeatBoxMIDI();
@@ -91,6 +99,22 @@ public class BeatBoxGUI implements BeatBoxConstants {
         this.checkboxList = checkboxList;
     }
 
+    public Map<Percussion, Set<Integer>> getPercussionBeats() {
+        return percussionBeats;
+    }
+
+    public void setPercussionBeats(Map<Percussion, Set<Integer>> percussionBeats) {
+        this.percussionBeats = percussionBeats;
+    }
+
+    public Map<MIDINotes, Set<Integer>> getInstrumentNoteBeats() {
+        return instrumentNoteBeats;
+    }
+
+    public void setInstrumentNoteBeats(Map<MIDINotes, Set<Integer>> instrumentNoteBeats) {
+        this.instrumentNoteBeats = instrumentNoteBeats;
+    }
+
     public Vector<String> getListVector() {
         return listVector;
     }
@@ -105,6 +129,30 @@ public class BeatBoxGUI implements BeatBoxConstants {
 
     public void setOtherSeqsMap(HashMap<String, boolean[]> otherSeqsMap) {
         this.otherSeqsMap = otherSeqsMap;
+    }
+
+    public HashMap<String, Map<Percussion, Set<Integer>>> getOtherSeqsMapPercussion() {
+        return otherSeqsMapPercussion;
+    }
+
+    public void setOtherSeqsMapPercussion(HashMap<String, Map<Percussion, Set<Integer>>> otherSeqsMapPercussion) {
+        this.otherSeqsMapPercussion = otherSeqsMapPercussion;
+    }
+
+    public HashMap<String, Map<MIDINotes, Set<Integer>>> getOtherSeqsMapMIDI() {
+        return otherSeqsMapMIDI;
+    }
+
+    public void setOtherSeqsMapMIDI(HashMap<String, Map<MIDINotes, Set<Integer>>> otherSeqsMapMIDI) {
+        this.otherSeqsMapMIDI = otherSeqsMapMIDI;
+    }
+
+    public HashMap<String, Integer> getOtherSeqsMapInstrument() {
+        return otherSeqsMapInstrument;
+    }
+
+    public void setOtherSeqsMapInstrument(HashMap<String, Integer> otherSeqsMapInstrument) {
+        this.otherSeqsMapInstrument = otherSeqsMapInstrument;
     }
 
     public String getUserName() {
@@ -158,6 +206,9 @@ public class BeatBoxGUI implements BeatBoxConstants {
         // Create combobox
         JLabel instrumJLabel;
         //JComboBox cb; initialized in class to be accessable
+        //cb = new JComboBox<String>(availableInstruments);
+        //JComboBox cb = new JComboBox();
+        //cb.setModel(new DefaultComboBoxModel(Instruments.values()));
         cb = new JComboBox<String>(availableInstruments);
         cb.addActionListener(new MyInstrumentSelectionListener());
         buttonBox.add(cb);
@@ -174,10 +225,6 @@ public class BeatBoxGUI implements BeatBoxConstants {
         buttonBox.add(theList);
         incommingList.setListData(listVector); // no data to start with
 
-//        Box nameBox = new Box(BoxLayout.Y_AXIS);
-//        for (int i = 0; i < TOTALINSTRUMENTS; i++) {
-//            nameBox.add(new Label(instrumentNames[i]));
-//        }
 
         Box nameBox = new Box(BoxLayout.Y_AXIS);
 
@@ -202,15 +249,48 @@ public class BeatBoxGUI implements BeatBoxConstants {
         mainPanel = new JPanel(grid);
         background.add(BorderLayout.CENTER, mainPanel);
 
-        for (int i = 0; i < TOTALCHECKBOXES; i++) {
-            JCheckBox c = new JCheckBox();
-            c.setSelected(false);
-            checkboxList.add(c);
-            mainPanel.add(c);
-        } // end loop
+//        for (int i = 0; i < TOTALCHECKBOXES; i++) {
+//            JCheckBox c = new JCheckBox();
+//            c.setSelected(false);
+//            checkboxList.add(c);
+//            mainPanel.add(c);
+//        } // end loop
+
+        // Adding Checkboxes for Percussion Instruments
+        for (Percussion percussion : Percussion.values()) {
+            for (int i = 0; i < TOTALBEATS; i++) {
+                JCheckBox c = new JCheckBox();
+                String name = String.valueOf(percussion) + "-" + i;
+                c.setName(name);
+                c.addItemListener(new MyPercussionCheckboxListener());
+                checkboxesPercussion.put(name, c);
+                checkboxList.add(c);
+                mainPanel.add(c);
+            } // end for loop
+        } // end enhanced for loop
+
+        // Adding Checkboxes for MIDINotes
+        for (MIDINotes notes : MIDINotes.values()) {
+            for (int i = 0; i < TOTALBEATS; i++) {
+                JCheckBox c = new JCheckBox();
+                String name = String.valueOf(notes) + "-" + i;
+                c.setName(name);
+                c.addItemListener(new MyMIDINotesCheckboxListener());
+                checkboxesMIDINotes.put(name, c);
+                checkboxList.add(c);
+                mainPanel.add(c);
+            } // end for loop
+        } // end enhanced for loop
+
 
         //Set the values for checkboxList in BeatBoxMIDI
         midi.setCheckboxList(checkboxList);
+
+        //Set the values for percussionBeats in BeatBoxMIDI
+        midi.setPercussionBeats(percussionBeats);
+
+        //Set the values for instrumentNoteBeats in BeatBoxMIDI
+        midi.setInstrumentNoteBeats(instrumentNoteBeats);
 
         theFrame.setBounds(50, 50, 300, 300);
         theFrame.pack();
@@ -220,6 +300,77 @@ public class BeatBoxGUI implements BeatBoxConstants {
         midi.setUpMidi();
 
     } // close buildGUI
+
+
+    public class MyPercussionCheckboxListener implements ItemListener {
+        public void itemStateChanged(ItemEvent e) {
+            Object source = e.getItem();
+            String cbName = ((JCheckBox) e.getItem()).getName();
+            String[] tokens = cbName.split("-");
+            String percussionStr = tokens[0];
+            String beatStr = tokens[1];
+
+            List<Integer> selectedList = new ArrayList<>();
+
+            for (int i = 0; i < TOTALBEATS; i++) {
+                String name = percussionStr + "-" + i;
+                checkboxSelected = checkboxesPercussion.get(name);
+                if (checkboxSelected.isSelected()) {
+                    selectedList.add(i);
+                }
+
+            }
+
+            Set<Integer> set = new HashSet<Integer>(selectedList);
+            for (Percussion percussion : Percussion.values()) {
+                String percussionValueStr = String.valueOf(percussion);
+                if (percussionValueStr.equals(percussionStr)) {
+                    //System.out.println("percussionValueStr.equals(percussionStr)");
+                    percussionBeats.put(percussion, set);
+//                    Set<Integer> setPrint = percussionBeats.get(percussion);
+//                    for (Integer value : setPrint) {
+//                        System.out.println("Set Value: " + value);
+//                    }
+                }
+            }
+
+        } // close itemStateChanged
+    } // close inner class
+
+    public class MyMIDINotesCheckboxListener implements ItemListener {
+        public void itemStateChanged(ItemEvent e) {
+            Object source = e.getItem();
+            String cbName = ((JCheckBox) e.getItem()).getName();
+            String[] tokens = cbName.split("-");
+            String MIDINotesStr = tokens[0];
+            String beatStr = tokens[1];
+
+            List<Integer> selectedList = new ArrayList<>();
+
+            for (int i = 0; i < TOTALBEATS; i++) {
+                String name = MIDINotesStr + "-" + i;
+                checkboxSelected = checkboxesMIDINotes.get(name);
+
+                if (checkboxSelected.isSelected()) {
+                    selectedList.add(i);
+                }
+            }
+
+            Set<Integer> set = new HashSet<Integer>(selectedList);
+            for (MIDINotes notes : MIDINotes.values()) {
+                String notesValueStr = String.valueOf(notes);
+                if (notesValueStr.equals(MIDINotesStr)) {
+                    //System.out.println("notesStr.equals(MIDINotesStr)");
+                    instrumentNoteBeats.put(notes, set);
+//                    Set<Integer> setPrint = instrumentNoteBeats.get(notes);
+//                    for (Integer value : setPrint) {
+//                        System.out.println("Set Value: " + value);
+//                    }
+                }
+            }
+
+        } // close itemStateChanged
+    } // close inner class
 
 
     public class MyStartListener implements ActionListener {
@@ -250,6 +401,45 @@ public class BeatBoxGUI implements BeatBoxConstants {
 
     public class MySendListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
+
+            // The state of the percussion checkboxes
+            List<Integer> selectedListPercussion = new ArrayList<>();
+
+            for (Percussion percussion : Percussion.values()) {
+                for (int i = 0; i < TOTALBEATS; i++) {
+                    String name = String.valueOf(percussion) + "-" + i;
+                    checkboxSelected = checkboxesPercussion.get(name);
+                    if (checkboxSelected.isSelected()) {
+                        selectedListPercussion.add(i);
+                    }
+                }
+            }
+
+            Set<Integer> setPercussion = new HashSet<Integer>(selectedListPercussion);
+            for (Percussion percussion : Percussion.values()) {
+                percussionBeats.put(percussion, setPercussion);
+            }
+
+            // The state of the MIDI checkboxes
+            List<Integer> selectedListMIDI = new ArrayList<>();
+
+            for (MIDINotes notes : MIDINotes.values()) {
+                for (int i = 0; i < TOTALBEATS; i++) {
+                    String name = String.valueOf(notes) + "-" + i;
+                    checkboxSelected = checkboxesMIDINotes.get(name);
+                    if (checkboxSelected.isSelected()) {
+                        selectedListMIDI.add(i);
+                    }
+                }
+            }
+
+            Set<Integer> setMIDI = new HashSet<Integer>(selectedListMIDI);
+            for (MIDINotes notes : MIDINotes.values()) {
+                instrumentNoteBeats.put(notes, setMIDI);
+            }
+
+
+
             // make an arraylist of just the STATE of the checkboxes
             boolean[] checkboxState = new boolean[TOTALCHECKBOXES];
             for (int i = 0; i < TOTALCHECKBOXES; i++) {
@@ -258,10 +448,15 @@ public class BeatBoxGUI implements BeatBoxConstants {
                     checkboxState[i] = true;
                 }
             } // close loop
+
+
             String messageToSend = null;
             try {
                 out.writeObject(userName + nextNum++ + ": " + userMessage.getText());
                 out.writeObject(checkboxState);
+                out.writeObject(percussionBeats);
+                out.writeObject(instrumentNoteBeats);
+                out.writeObject(selectedInstrument);
             } catch (Exception ex) {
                 System.out.println("Sorry dude. Could not send it to the server.");
             }
@@ -276,7 +471,12 @@ public class BeatBoxGUI implements BeatBoxConstants {
                 if (selected != null) {
                     // now go to the map, and change the sequence
                     boolean[] selectedState = (boolean[]) otherSeqsMap.get(selected);
-                    midi.changeSequence(selectedState);
+                    Map<Percussion, Set<Integer>> selectedPercussionBeats = (Map<Percussion, Set<Integer>>) otherSeqsMapPercussion.get(selected);
+                    Map<MIDINotes, Set<Integer>> selectedInstrumentNoteBeats = (Map<MIDINotes, Set<Integer>>) otherSeqsMapMIDI.get(selected);
+                    Integer otherSeqInstrumentInteger = otherSeqsMapInstrument.get(selected);
+                    int otherSeqInstrument = otherSeqInstrumentInteger.intValue();
+                    //midi.changeSequence(selectedState);
+                    midi.changeSequence(selectedState, selectedPercussionBeats, selectedInstrumentNoteBeats, otherSeqInstrument);
                     midi.getSequencer().stop();
                     midi.buildTrackAndStart();
                 }
@@ -288,8 +488,11 @@ public class BeatBoxGUI implements BeatBoxConstants {
 
     public class MyInstrumentSelectionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            //Instruments selectedItem = (Instruments) cb.getSelectedItem();
+            //System.out.println("selectedItem: " + selectedItem);
             String selectedInstrumString = cb.getSelectedItem().toString();
-
+            //System.out.println("cb.getSelectedItem(): " + cb.getSelectedItem());
+            //System.out.println("selectedInstrumString: " + selectedInstrumString);
             switch(selectedInstrumString)
             {
                 case "Acoustic Grand Piano":
@@ -319,11 +522,6 @@ public class BeatBoxGUI implements BeatBoxConstants {
 
             // Updating the instruments array for the new value of selectedInstrument
             midi.setSelectedInstrument(selectedInstrument);
-            instruments = midi.getInstruments();
-            for (int i = 16; i < instruments.length; i++) {
-                instruments[i] = selectedInstrument;
-            }
-            midi.setInstruments(instruments);
 
             // Stopping
             midi.getSequencer().stop();

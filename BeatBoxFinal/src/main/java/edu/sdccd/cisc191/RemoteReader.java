@@ -37,6 +37,12 @@ public class RemoteReader implements Runnable {
     private Vector<String> listVector;
     private JList incommingList;
     private HashMap<String, boolean[]> otherSeqsMap;
+    private HashMap<String, Map<Percussion, Set<Integer>>> otherSeqsMapPercussion;
+    private HashMap<String, Map<MIDINotes, Set<Integer>>> otherSeqsMapMIDI;
+    private HashMap<String, Integer> otherSeqsMapInstrument;
+    private Map<Percussion, Set<Integer>> percussionBeats = null;
+    private Map<MIDINotes, Set<Integer>> instrumentNoteBeats = null;
+    private int selectedInstrument = 1;
 
     public ObjectInputStream getIn() {
         return in;
@@ -70,6 +76,31 @@ public class RemoteReader implements Runnable {
         this.otherSeqsMap = otherSeqsMap;
     }
 
+    public HashMap<String, Map<Percussion, Set<Integer>>> getOtherSeqsMapPercussion() {
+        return otherSeqsMapPercussion;
+    }
+
+    public void setOtherSeqsMapPercussion(HashMap<String, Map<Percussion, Set<Integer>>> otherSeqsMapPercussion) {
+        this.otherSeqsMapPercussion = otherSeqsMapPercussion;
+    }
+
+    public HashMap<String, Map<MIDINotes, Set<Integer>>> getOtherSeqsMapMIDI() {
+        return otherSeqsMapMIDI;
+    }
+
+    public void setOtherSeqsMapMIDI(HashMap<String, Map<MIDINotes, Set<Integer>>> otherSeqsMapMIDI) {
+        this.otherSeqsMapMIDI = otherSeqsMapMIDI;
+    }
+
+    public HashMap<String, Integer> getOtherSeqsMapInstrument() {
+        return otherSeqsMapInstrument;
+    }
+
+    public void setOtherSeqsMapInstrument(HashMap<String, Integer> otherSeqsMapInstrument) {
+        this.otherSeqsMapInstrument = otherSeqsMapInstrument;
+    }
+
+
     // This is the thread job -- read in data from the server. In this code, 'data' will
     // always be two serialized objects: the String message and the beat pattern (an
     // arrayList of checkbox state values)
@@ -87,7 +118,13 @@ public class RemoteReader implements Runnable {
                 System.out.println(obj.getClass());
                 String nameToShow = (String) obj;
                 checkboxState = (boolean[]) in.readObject();
+                percussionBeats = (Map<Percussion, Set<Integer>>) in.readObject();
+                instrumentNoteBeats = (Map<MIDINotes, Set<Integer>>) in.readObject();
+                selectedInstrument = (int) in.readObject();
                 otherSeqsMap.put(nameToShow, checkboxState);
+                otherSeqsMapPercussion.put(nameToShow, percussionBeats);
+                otherSeqsMapMIDI.put(nameToShow, instrumentNoteBeats);
+                otherSeqsMapInstrument.put(nameToShow, selectedInstrument);
                 listVector.add(nameToShow);
                 incommingList.setListData(listVector);
             } // close while

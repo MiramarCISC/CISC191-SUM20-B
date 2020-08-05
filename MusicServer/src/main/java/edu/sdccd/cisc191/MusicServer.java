@@ -44,15 +44,18 @@ public class MusicServer {
         } // close constructor
 
         public void run() {
-            Object o2 = null;
             Object o1 = null;
+            Object o2 = null;
+            Object o3 = null;
+            Object o4 = null;
             try {
                 while ((o1 = in.readObject()) != null) {
-
                     o2 = in.readObject();
+                    o3 = in.readObject();
+                    o4 = in.readObject();
 
-                    System.out.println("read two objects");
-                    tellEveryone(o1, o2);
+                    System.out.println("read four objects");
+                    tellEveryone(o1, o2, o3, o4);
                 } // close while
             } catch(Exception ex) { ex.printStackTrace();}
         } // close run
@@ -79,13 +82,15 @@ public class MusicServer {
         }
     } // close go
 
-    public void tellEveryone(Object one, Object two) {
+    public void tellEveryone(Object one, Object two, Object three, Object four) {
         Iterator it = clientOutputStreams.iterator();
         while(it.hasNext()) {
             try {
                 ObjectOutputStream out = (ObjectOutputStream) it.next();
                 out.writeObject(one);
                 out.writeObject(two);
+                out.writeObject(three);
+                out.writeObject(four);
             } catch(Exception ex) { ex.printStackTrace();}
         }
     } // close tellEveryone
