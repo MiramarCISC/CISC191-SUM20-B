@@ -17,6 +17,14 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of RemoteReader.java
+// This is the thread job -- read in data from the server. In this code, 'data' will
+// always be two serialized objects: the String message and the beat/note pattern (an
+// arrayList of checkbox state values). When a message comes in it is added to a
+// JList component.
+//
+//  Author(s):
+//  Kevin Johnson
 //
 
 import java.awt.*;

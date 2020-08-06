@@ -17,6 +17,15 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of BeatBoxApp.java
+// The purpose of this file is to start the client side of the BeatBox program.
+// The person adds a screen name at the command line to use during the program.
+// The file sets up an ObjectInputStream and an ObjectOutputStream for communication
+// with the server. It also starts a thread that has the job of reading two objects,
+// the message and the ArrayList of Boolean checkbox state values.
+//
+//  Author(s):
+//  Kevin Johnson
 //
 
 

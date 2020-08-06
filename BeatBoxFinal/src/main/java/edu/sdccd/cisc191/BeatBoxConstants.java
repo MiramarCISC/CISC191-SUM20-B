@@ -18,6 +18,14 @@ package edu.sdccd.cisc191;
 // by Kathy Sierra and Bert Bates
 //
 //
+// Description of BeatBoxConstants.java
+// The purpose of this interface is to store constants used by BeatBox
+// program.
+//
+//  Author(s):
+//  Kevin Johnson
+//
+//
 
 public interface BeatBoxConstants {
     public static final int TOTALBEATS = 16;

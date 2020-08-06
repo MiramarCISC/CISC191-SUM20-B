@@ -17,6 +17,14 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of MusicServer.java
+// This server receives and then resends, two serialized objects to everybody
+// connected to the server. The two serialize objects are the String message
+// and the beat/note pattern (an arrayList of checkbox state values).
+//
+//  Author(s):
+//  Kevin Johnson
+//
 //
 
 import java.io.*;
