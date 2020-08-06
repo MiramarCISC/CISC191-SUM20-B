@@ -142,6 +142,14 @@ public class BeatBoxGUI implements BeatBoxConstants {
         stop.addActionListener(new MyStopListener());
         buttonBox.add(stop);
 
+        JButton clear = new JButton("Clear");
+        clear.addActionListener(new MyClearListener());
+        buttonBox.add(clear);
+
+//        JButton save = new JButton("Save");
+//        save.addActionListener(new MySaveListener());
+//        buttonBox.add(save);
+
         JButton upTempo = new JButton("Tempo Up");
         upTempo.addActionListener(new MyUpTempoListener());
         buttonBox.add(upTempo);
@@ -218,6 +226,18 @@ public class BeatBoxGUI implements BeatBoxConstants {
     public class MyStopListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
             midi.getSequencer().stop();
+        } // close actionPerformed
+    } // close inner class
+
+    public class MyClearListener implements ActionListener {
+        public void actionPerformed(ActionEvent a) {
+            midi.getSequencer().stop();
+            for (int i = 0; i < TOTALCHECKBOXES; i++) {
+                JCheckBox check = (JCheckBox) checkboxList.get(i);
+                if (check.isSelected()) {
+                    check.doClick();
+                }
+            }
         } // close actionPerformed
     } // close inner class
 
