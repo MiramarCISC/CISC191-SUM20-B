@@ -17,6 +17,12 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of MIDINotes.java
+// The purpose of this file is to create an enum Type for the
+// notes to be played by the selected instrument.
+//
+//  Author(s):
+//  Kevin Johnson
 //
 
 public enum MIDINotes {

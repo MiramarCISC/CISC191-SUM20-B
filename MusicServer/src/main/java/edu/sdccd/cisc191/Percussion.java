@@ -18,6 +18,14 @@ package edu.sdccd.cisc191;
 // by Kathy Sierra and Bert Bates
 //
 //
+// Description of Percussion.java
+// The purpose of this file is to create an enum Type for the
+// percussion instruments to be played.
+//
+//  Author(s):
+//  Kevin Johnson
+//
+//
 
 public enum Percussion {
     BASS("Bass Drum", 35),

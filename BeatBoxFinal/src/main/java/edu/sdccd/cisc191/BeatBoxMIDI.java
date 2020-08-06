@@ -17,6 +17,17 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of BeatBoxMIDI.java
+// The purpose of this file is to handle the Musical Instrument Digital
+// Interface or MIDI. It creates the instructions for a MIDI reading
+// instrument to play back. The synthesizer (a software synthesizer) provided
+// with Java is used to create the sound. It takes the information provided
+// by the check boxes and turns it into a tune.
+//
+//  Author(s):
+//  Kevin Johnson
+//
+//
 //
 
 import java.awt.*;

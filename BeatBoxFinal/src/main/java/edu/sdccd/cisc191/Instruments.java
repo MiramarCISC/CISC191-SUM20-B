@@ -17,6 +17,12 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of Instruments.java
+// The purpose of this file is to create an enum Type for the
+// instruments to be selected to be played (played one at a time).
+//
+//  Author(s):
+//  Kevin Johnson
 //
 
 public enum Instruments {
@@ -31,5 +37,10 @@ public enum Instruments {
     public final String name;
     Instruments(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -17,6 +17,22 @@ package edu.sdccd.cisc191;
 // Second Edition
 // by Kathy Sierra and Bert Bates
 //
+// Description of BeatBoxGUI.java
+// The purpose of this file is to create the graphical user interface of the
+// client side of the BeatBox program. This is where the user selects the
+// beats a percussion instrument should play on or the notes of a selected
+// instrument the instrument should play on. The user is able to start and
+// stop the beats or the music using the Start and Stop buttons. The person
+// is also able to speed up the tempo or slow down the tempo using the
+// Tempo Up and Temp Down buttons. The person is able to write a message
+// that gets sent with the music pattern, to all the other players connected
+// to the server, by using the SendIt button. The person is able to change
+// the instrument that is playing the notes in the pattern by selecting the
+// instrument from the combo box.
+//
+//  Author(s):
+//  Kevin Johnson
+//
 //
 
 import java.awt.*;
@@ -59,18 +75,6 @@ public class BeatBoxGUI implements BeatBoxConstants {
             "Acoustic Guitar (steel)", "Overdriven Guitar", "Electric Bass (finger)", "Violin",
             "Trumpet", "Alto Sax"};
 
-    private final String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Snare",
-            "Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas",
-            "Whistle", "Low Conga", "Cowbell", "Vibraslap", "Low-mid Tom",
-            "High Agogo", "Open Hi Conga", "C above Middle C", "B above Middle C",
-            "A# above Middle C", "A above Middle C", "G# above Middle C",
-            "G above Middle C", "F# above Middle C", "F above Middle C",
-            "E above Middle C", "D# above Middle C", "D above Middle C",
-            "C# above Middle C", "Middle C", "B below Middle C",
-            "A# below Middle C", "A below Middle C", "G# below Middle C",
-            "G below Middle C", "F# below Middle C", "F below Middle C",
-            "E below Middle C", "D# below Middle C", "D below Middle C",
-            "C# below Middle C", "C below Middle C"};
 
 
     // Creating BeatBoxMIDI object
@@ -147,7 +151,7 @@ public class BeatBoxGUI implements BeatBoxConstants {
 
     public void buildGUI() {
 
-        theFrame = new JFrame("Cyber BeatBox");
+        theFrame = new JFrame("Cyber MusicBox");
         BorderLayout layout = new BorderLayout();
         JPanel background = new JPanel(layout);
         background.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -179,10 +183,19 @@ public class BeatBoxGUI implements BeatBoxConstants {
         // Create combobox
         JLabel instrumJLabel;
         //JComboBox cb; initialized in class to be accessable
-        //cb = new JComboBox<String>(availableInstruments);
-        //JComboBox cb = new JComboBox();
-        //cb.setModel(new DefaultComboBoxModel(Instruments.values()));
         cb = new JComboBox<String>(availableInstruments);
+//        JComboBox cb = new JComboBox();
+//        cb.setModel(new DefaultComboBoxModel(Instruments.values()));
+
+//        ArrayList<String> al = new ArrayList<String>();
+//        for (Instruments instrument : Instruments.values()) {
+//            al.add(instrument.name);
+//        }
+//
+//        String[] items = new String[al.size()];
+//        al.toArray(items);
+//        cb.setModel(new DefaultComboBoxModel<String>(items));
+
         cb.addActionListener(new MyInstrumentSelectionListener());
         buttonBox.add(cb);
         instrumJLabel = new JLabel("Select Instrument");
@@ -402,6 +415,11 @@ public class BeatBoxGUI implements BeatBoxConstants {
     public class MyInstrumentSelectionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String selectedInstrumString = cb.getSelectedItem().toString();
+            //Instruments selectedInstrum = (Instruments)cb.getSelectedItem();
+            //int selectedIndex = cb.getSelectedIndex();
+            //System.out.println("selectedIndex: " + selectedIndex);
+
+            //Instruments selectedInstrum = (Instruments)cb.getSelectedItem();
 
             switch(selectedInstrumString)
             {
@@ -429,6 +447,9 @@ public class BeatBoxGUI implements BeatBoxConstants {
                 default:
                     selectedInstrument = 1;
             }
+
+
+
 
             // Updating the instruments array for the new value of selectedInstrument
             midi.setSelectedInstrument(selectedInstrument);
