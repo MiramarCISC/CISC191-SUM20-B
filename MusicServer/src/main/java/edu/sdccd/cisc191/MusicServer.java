@@ -52,11 +52,11 @@ public class MusicServer {
         } // close constructor
 
         public void run() {
-            Object o2 = null;
             Object o1 = null;
+            Object o2 = null;
+
             try {
                 while ((o1 = in.readObject()) != null) {
-
                     o2 = in.readObject();
 
                     System.out.println("read two objects");

@@ -98,7 +98,6 @@ public class BeatBoxApp implements BeatBoxConstants {
     }
 
 
-
     public static void main(String[] args) {
         BeatBoxApp app = new BeatBoxApp();
         app.startUp(args[0]);    // args[0] is your user ID/screen name

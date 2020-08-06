@@ -45,6 +45,9 @@ public class RemoteReader implements Runnable {
     private Vector<String> listVector;
     private JList incommingList;
     private HashMap<String, boolean[]> otherSeqsMap;
+    private Map<Percussion, Set<Integer>> percussionBeats = null;
+    private Map<MIDINotes, Set<Integer>> instrumentNoteBeats = null;
+    private int selectedInstrument = 1;
 
     public ObjectInputStream getIn() {
         return in;
@@ -77,6 +80,7 @@ public class RemoteReader implements Runnable {
     public void setOtherSeqsMap(HashMap<String, boolean[]> otherSeqsMap) {
         this.otherSeqsMap = otherSeqsMap;
     }
+
 
     // This is the thread job -- read in data from the server. In this code, 'data' will
     // always be two serialized objects: the String message and the beat pattern (an
