@@ -1,31 +1,31 @@
 package edu.sdccd.cisc191;
-// BeatBox Final Project
-// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
-//
-// Group Members
-// Cesar Castillo Alonso
-// William Hammond
-// Paige Hodgkinson
-// Kevin Johnson
-// Thomas Marcoux
-//
-//
-// Final BeatBox Client Program
-//
-// Program taken from
-// Head First Java
-// Second Edition
-// by Kathy Sierra and Bert Bates
-//
-//
-// Description of Percussion.java
-// The purpose of this file is to create an enum Type for the
-// percussion instruments to be played.
-//
-//  Author(s):
-//  Kevin Johnson
-//
-//
+/** BeatBox Final Project
+*   Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+*
+*   Group Members
+*   Cesar Castillo Alonso
+*   William Hammond
+*   Paige Hodgkinson
+*   Kevin Johnson
+*   Thomas Marcoux
+*
+*
+*   Final BeatBox Client Program
+*
+*   Program taken from
+*   Head First Java
+*   Second Edition
+*   by Kathy Sierra and Bert Bates
+*
+*
+*   Description of Percussion.java
+*   The purpose of this file is to create an enum Type for the
+*   percussion instruments to be played.
+*
+*   Author(s):
+*   @author Kevin Johnson
+*
+*/
 
 public enum Percussion {
     BASS("Bass Drum", 35),

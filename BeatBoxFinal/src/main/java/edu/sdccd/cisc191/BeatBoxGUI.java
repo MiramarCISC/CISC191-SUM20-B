@@ -1,39 +1,39 @@
 package edu.sdccd.cisc191;
-// BeatBox Final Project
-// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
-//
-// Group Members
-// Cesar Castillo Alonso
-// William Hammond
-// Paige Hodgkinson
-// Kevin Johnson
-// Thomas Marcoux
-//
-//
-// Final BeatBox Client Program
-//
-// Program taken from
-// Head First Java
-// Second Edition
-// by Kathy Sierra and Bert Bates
-//
-// Description of BeatBoxGUI.java
-// The purpose of this file is to create the graphical user interface of the
-// client side of the BeatBox program. This is where the user selects the
-// beats a percussion instrument should play on or the notes of a selected
-// instrument the instrument should play on. The user is able to start and
-// stop the beats or the music using the Start and Stop buttons. The person
-// is also able to speed up the tempo or slow down the tempo using the
-// Tempo Up and Temp Down buttons. The person is able to write a message
-// that gets sent with the music pattern, to all the other players connected
-// to the server, by using the SendIt button. The person is able to change
-// the instrument that is playing the notes in the pattern by selecting the
-// instrument from the combo box.
-//
-//  Author(s):
-//  Kevin Johnson
-//
-//
+/** BeatBox Final Project
+*   Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+*
+*   Group Members
+*   Cesar Castillo Alonso
+*   William Hammond
+*   Paige Hodgkinson
+*   Kevin Johnson
+*   Thomas Marcoux
+*
+*
+*   Final BeatBox Client Program
+*
+*   Program taken from
+*   Head First Java
+*   Second Edition
+*   by Kathy Sierra and Bert Bates
+*
+*   Description of BeatBoxGUI.java
+*   The purpose of this file is to create the graphical user interface of the
+*   client side of the BeatBox program. This is where the user selects the
+*   beats a percussion instrument should play on or the notes of a selected
+*   instrument the instrument should play on. The user is able to start and
+*   stop the beats or the music using the Start and Stop buttons. The person
+*   is also able to speed up the tempo or slow down the tempo using the
+*   Tempo Up and Temp Down buttons. The person is able to write a message
+*   that gets sent with the music pattern, to all the other players connected
+*   to the server, by using the SendIt button. The person is able to change
+*   the instrument that is playing the notes in the pattern by selecting the
+*   instrument from the combo box.
+*
+*  Author(s):
+*  @author Kevin Johnson
+*  @author William Hammond
+*/
 
 import java.awt.*;
 import javax.swing.*;

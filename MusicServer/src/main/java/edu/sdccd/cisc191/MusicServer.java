@@ -1,31 +1,31 @@
 package edu.sdccd.cisc191;
-// BeatBox Final Project
-// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
-//
-// Group Members
-// Cesar Castillo Alonso
-// William Hammond
-// Paige Hodgkinson
-// Kevin Johnson
-// Thomas Marcoux
-//
-//
-// Final BeatBox Server Program
-//
-// Program taken from
-// Head First Java
-// Second Edition
-// by Kathy Sierra and Bert Bates
-//
-// Description of MusicServer.java
-// This server receives and then resends, two serialized objects to everybody
-// connected to the server. The two serialize objects are the String message
-// and the beat/note pattern (an arrayList of checkbox state values).
-//
-//  Author(s):
-//  Kevin Johnson
-//
-//
+/** BeatBox Final Project
+*   Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+*
+*   Group Members
+*   Cesar Castillo Alonso
+*   William Hammond
+*   Paige Hodgkinson
+*   Kevin Johnson
+*   Thomas Marcoux
+*
+*
+*   Final BeatBox Server Program
+*
+*   Program taken from
+*   Head First Java
+*   Second Edition
+*   by Kathy Sierra and Bert Bates
+*
+*   Description of MusicServer.java
+*   This server receives and then resends, two serialized objects to everybody
+*   connected to the server. The two serialize objects are the String message
+*   and the beat/note pattern (an arrayList of checkbox state values).
+*
+*   Author(s):
+*   @author Kevin Johnson
+*
+*/
 
 import java.io.*;
 import java.net.*;

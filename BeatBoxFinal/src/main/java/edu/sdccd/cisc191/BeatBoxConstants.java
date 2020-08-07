@@ -1,31 +1,31 @@
 package edu.sdccd.cisc191;
-// BeatBox Final Project
-// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
-//
-// Group Members
-// Cesar Castillo Alonso
-// William Hammond
-// Paige Hodgkinson
-// Kevin Johnson
-// Thomas Marcoux
-//
-//
-// Final BeatBox Client Program
-//
-// Program taken from
-// Head First Java
-// Second Edition
-// by Kathy Sierra and Bert Bates
-//
-//
-// Description of BeatBoxConstants.java
-// The purpose of this interface is to store constants used by BeatBox
-// program.
-//
-//  Author(s):
-//  Kevin Johnson
-//
-//
+/**  BeatBox Final Project
+*   Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+*
+*   Group Members
+*   Cesar Castillo Alonso
+*   William Hammond
+*   Paige Hodgkinson
+*   Kevin Johnson
+*   Thomas Marcoux
+*
+*
+*   Final BeatBox Client Program
+*
+*   Program taken from
+*   Head First Java
+*   Second Edition
+*   by Kathy Sierra and Bert Bates
+*
+*
+*   Description of BeatBoxConstants.java
+*   The purpose of this interface is to store constants used by BeatBox
+*   program.
+*
+*   Author(s):
+*   @author Kevin Johnson
+*
+*/
 
 public interface BeatBoxConstants {
     public static final int TOTALBEATS = 16;

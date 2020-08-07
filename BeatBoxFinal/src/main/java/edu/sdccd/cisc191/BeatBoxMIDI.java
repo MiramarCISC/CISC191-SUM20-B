@@ -1,34 +1,34 @@
 package edu.sdccd.cisc191;
-// BeatBox Final Project
-// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
-//
-// Group Members
-// Cesar Castillo Alonso
-// William Hammond
-// Paige Hodgkinson
-// Kevin Johnson
-// Thomas Marcoux
-//
-//
-// Final BeatBox Client Program
-//
-// Program taken from
-// Head First Java
-// Second Edition
-// by Kathy Sierra and Bert Bates
-//
-// Description of BeatBoxMIDI.java
-// The purpose of this file is to handle the Musical Instrument Digital
-// Interface or MIDI. It creates the instructions for a MIDI reading
-// instrument to play back. The synthesizer (a software synthesizer) provided
-// with Java is used to create the sound. It takes the information provided
-// by the check boxes and turns it into a tune.
-//
-//  Author(s):
-//  Kevin Johnson
-//
-//
-//
+/** BeatBox Final Project
+*   Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+*
+*   Group Members
+*   Cesar Castillo Alonso
+*   William Hammond
+*   Paige Hodgkinson
+*   Kevin Johnson
+*   Thomas Marcoux
+*
+*
+*   Final BeatBox Client Program
+*
+*   Program taken from
+*   Head First Java
+*   Second Edition
+*   by Kathy Sierra and Bert Bates
+*
+*   Description of BeatBoxMIDI.java
+*   The purpose of this file is to handle the Musical Instrument Digital
+*   Interface or MIDI. It creates the instructions for a MIDI reading
+*   instrument to play back. The synthesizer (a software synthesizer) provided
+*   with Java is used to create the sound. It takes the information provided
+*   by the check boxes and turns it into a tune.
+*
+*   Author(s):
+*   @author Kevin Johnson
+*
+*
+*/
 
 import java.awt.*;
 import javax.swing.*;

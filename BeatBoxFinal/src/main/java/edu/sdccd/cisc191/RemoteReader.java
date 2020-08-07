@@ -1,31 +1,31 @@
 package edu.sdccd.cisc191;
-// BeatBox Final Project
-// Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
-//
-// Group Members
-// Cesar Castillo Alonso
-// William Hammond
-// Paige Hodgkinson
-// Kevin Johnson
-// Thomas Marcoux
-//
-//
-// Final BeatBox Client Program
-//
-// Program taken from
-// Head First Java
-// Second Edition
-// by Kathy Sierra and Bert Bates
-//
-// Description of RemoteReader.java
-// This is the thread job -- read in data from the server. In this code, 'data' will
-// always be two serialized objects: the String message and the beat/note pattern (an
-// arrayList of checkbox state values). When a message comes in it is added to a
-// JList component.
-//
-//  Author(s):
-//  Kevin Johnson
-//
+/** BeatBox Final Project
+*   Group B - Summer 2020 - CISC 191 – Intermediate Java Programming
+*
+*   Group Members
+*   Cesar Castillo Alonso
+*   William Hammond
+*   Paige Hodgkinson
+*   Kevin Johnson
+*   Thomas Marcoux
+*
+*
+*   Final BeatBox Client Program
+*
+*   Program taken from
+*   Head First Java
+*   Second Edition
+*   by Kathy Sierra and Bert Bates
+*
+*   Description of RemoteReader.java
+*   This is the thread job -- read in data from the server. In this code, 'data' will
+*   always be two serialized objects: the String message and the beat/note pattern (an
+*   arrayList of checkbox state values). When a message comes in it is added to a
+*   JList component.
+*
+*   Author(s):
+*   @author Kevin Johnson
+*/
 
 import java.awt.*;
 import javax.swing.*;
